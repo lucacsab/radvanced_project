@@ -8,7 +8,7 @@ library("ggplot2")
 
 
 # Load Gencode annotation, format:
-gencode <- "/home/dbenedek/uni/msc/Semester_4/Advanced_R_programming_for_biologists/project/gencode.v37.annotation.gtf.gz"
+gencode <- "/home/dbenedek/uni/msc/Semester_4/Advanced_R_programming_for_biologists/project/data/gencode.v37.annotation.gtf.gz"
 gencode_annot <- fread(gencode,
                        col.names = c("chr", "ensemble", "type",
                                      "start", "end", "V6", "strand",
@@ -16,12 +16,6 @@ gencode_annot <- fread(gencode,
   mutate(gene_id = str_extract(info, "ENSG\\d+")) %>% 
   mutate(gene_name = str_extract(info, 'gene_name\\s.\\w+')) %>% 
   mutate(gene_name = str_replace(gene_name, 'gene_name \"', ""))
-
-# Load chromosome info:
-chr_info <- fread("/home/dbenedek/uni/msc/Semester_4/Advanced_R_programming_for_biologists/project/chromInfo.txt") %>% 
-  dplyr::select(-V3) %>% 
-  filter(V1 %in% mirna_per_chr$chr) %>% 
-  left_join(mirna_per_chr, by=c("V1"="chr"))
 
 
 # Get only the miRNA data:
@@ -38,6 +32,14 @@ mirna_per_chr <- mirna_annot %>%
                                   "chr16","chr17","chr18","chr19","chr20",
                                   "chr21","chr22","chrX","chrY")))
 
+
+# Load chromosome info:
+chr_info <- fread("/home/dbenedek/uni/msc/Semester_4/Advanced_R_programming_for_biologists/project/data/chromInfo.txt") %>%
+  dplyr::select(-V3) %>%
+  filter(V1 %in% mirna_per_chr$chr) %>%
+  left_join(mirna_per_chr, by=c("V1"="chr"))
+
+ 
 # Plot number of miRNAs per chromosome:
 boxplot_mirnacount <- ggplot(mirna_per_chr,
                              aes(x=chr,
@@ -73,3 +75,8 @@ cor_plot <- ggplot(chr_info, aes(x=V2, y=count,label = V1))+
         legend.position="none")+
   xlab("Chromosome length (bp)")+
   ylab("Number of miRNAs")
+
+
+# Save plot:
+ggsave("/home/dbenedek/uni/msc/Semester_4/Advanced_R_programming_for_biologists/project/docs/corr_plot.png",
+       cor_plot, units = "in", width = 14, height = 10)
