@@ -68,7 +68,7 @@ cor_plot <- ggplot(chr_info, aes(x=V2, y=count,label = V1))+
   ggrepel::geom_text_repel()+
   theme_minimal() +
   theme(panel.border = element_rect(color = "black", fill = NA),
-        axis.text.x = element_text(size=12, hjust = 1, vjust = 0.5, angle=0),
+        axis.text.x = element_text(size=12, hjust = 0.5, vjust = 0.5, angle=0),
         axis.title.x = element_text(size = 14, margin = margin(t = 10, r = 0, b = 0, l = 0)),
         axis.title.y = element_text(size = 14, margin = margin(t = 0, r = 10, b = 0, l = 0)),
         axis.text.y = element_text(size = 12),
@@ -79,4 +79,4 @@ cor_plot <- ggplot(chr_info, aes(x=V2, y=count,label = V1))+
 
 # Save plot:
 ggsave("/home/dbenedek/uni/msc/Semester_4/Advanced_R_programming_for_biologists/project/docs/corr_plot.png",
-       cor_plot, units = "in", width = 14, height = 10)
+       cor_plot, units = "in", width = 12, height = 8)
