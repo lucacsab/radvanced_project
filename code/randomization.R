@@ -2,6 +2,8 @@
 # Randomization #
 #################
 
+# Sophie Farkas
+
 # Data cleaning ----
 
 # Loading the source table
