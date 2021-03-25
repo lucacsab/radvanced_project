@@ -78,14 +78,22 @@ df_interactions_annot <- df_interactions %>%
   left_join(gencode_annot, by=c("mirna"="gene_name")) %>% 
   dplyr::select(c(chr, target_gene, mirna, gene_id)) %>% 
   dplyr::rename(mirna_chr=chr,
-                minra_gene_id = gene_id)
+                mirna_gene_id = gene_id)
 df_interactions_annot <- df_interactions_annot %>% 
   left_join(gencode_annot, by=c("target_gene"="gene_name")) %>% 
   dplyr::rename(target_gene_chr=chr,
                 target_gene_id = gene_id) %>% 
   dplyr::select(-c(info, ensemble, type, start, end, V6, strand, V8)) %>% 
   filter(!is.na(target_gene_chr)) %>% 
-  mutate(chr_interaction = paste0(mirna_chr, " - ",target_gene_chr))
+  mutate(chr_interaction = paste0(mirna_chr, " - ",target_gene_chr)) %>% 
+  distinct()
+
+# df_interactions_annot[df_interactions_annot=="NA"] <- NA
+# write_tsv(df_interactions_annot %>% dplyr::select(c(mirna, target_gene,
+#                                                       mirna_gene_id, target_gene_id,
+#                                                       mirna_chr, target_gene_chr)),
+#           "/home/dbenedek/uni/msc/Semester_4/Advanced_R_programming_for_biologists/project/data/mirna_targetgene_pairs.tsv",
+#           col_names = T)
 
 chr_interactions <- df_interactions_annot %>% 
   dplyr::select(chr_interaction, target_gene_chr, mirna_chr) %>% 
